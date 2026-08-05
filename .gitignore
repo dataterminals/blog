@@ -1,0 +1,8 @@
+_site/
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+
+# GitHub Pages resolves its own gem versions and ignores this file, so
+# committing it only invites drift between local and deployed builds.
+Gemfile.lock

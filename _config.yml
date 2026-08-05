@@ -1,0 +1,54 @@
+# dataterminals blog — minima's structure, the hub's house style.
+# Served from the `blog` repo, so GitHub Pages puts it at
+# https://dataterminals.github.io/blog/ — the same arrangement geohot uses.
+
+# ---- Identity -------------------------------------------------------------
+# `title` is the header wordmark and the footer heading.
+# `description` is the footer's third column (minima's tagline slot) and the
+# feed/SEO description. Both are placeholders borrowed from the hub's own
+# <meta description> — swap them for blog-specific copy when you have it.
+title: dataterminals
+description: >-
+  Mods, tools & datamining for the games we play.
+
+# Footer contact line. Deliberately unset: minima prints this address in plain
+# text on every page. Uncomment only if you want it public.
+# email: you@example.com
+
+github_username: dataterminals
+
+# Rendered as the header's "the hub" link, back to the landing page.
+home_url: "https://dataterminals.github.io/"
+
+# ---- Where it lives -------------------------------------------------------
+url: "https://dataterminals.github.io"
+baseurl: "/blog"
+
+# ---- Build ----------------------------------------------------------------
+# Clean dated permalinks: /blog/2026/08/05/post-title/
+# (geohot's are /blog/jekyll/update/2026/07/12/….html — that's Jekyll's default
+# format picking up the `categories: jekyll update` from the scaffold post he
+# never removed, not a deliberate choice. This is the same thing done on purpose.)
+permalink: /:year/:month/:day/:title/
+
+markdown: kramdown
+kramdown:
+  input: GFM              # fenced code blocks, tables, strikethrough
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-feed           # /blog/feed.xml
+  - jekyll-seo-tag        # <title>, OG tags, canonical
+
+# Post dates carry no zone unless you give them one, so Jekyll stamps them in
+# the build machine's zone — UTC on GitHub Pages, local when you preview. A post
+# written late in the evening can land on the previous day in the built site.
+# Set this to your own zone and the two agree.
+# timezone: Europe/Helsinki
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor

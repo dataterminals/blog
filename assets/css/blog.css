@@ -1,0 +1,608 @@
+/* dataterminals blog
+   ------------------------------------------------------------------------
+   minima's markup and class names, wearing the hub's house style.
+
+   Everything under "Tokens" and "Atmosphere" is copied from
+   dataterminals.github.io/styles.css. That duplication is the price of the
+   blog being its own repo — when you retune the palette on the hub, retune it
+   here. Nothing else in this file exists over there.
+
+   The translation, minima → house:
+     #fdfdfd page      → the oxblood gradient + video
+     #111    text      → --ink
+     #828282 meta      → --ink-faint
+     #2a7ae2 links     → --accent
+     #e8e8e8 rules     → --hair
+     800px   wrapper   → --maxw (660px, the hub's own measure)
+     sans headings     → --serif for titles, tracked --sans for meta
+   ---------------------------------------------------------------------- */
+
+/* ================= Tokens ================= */
+
+:root {
+  --bg-0: #100804;            /* deepest warm black */
+  --bg-1: #1c0f0a;            /* oxblood base */
+  --bg-2: #2a140d;            /* warmer highlight for the gradient */
+  --ink: #f1e7da;             /* warm bone — primary text */
+  --ink-dim: #c8b3a3;         /* muted taupe — secondary */
+  --ink-faint: #94796a;       /* faint — meta */
+  --accent: #d8794c;          /* terracotta ember — links / hover */
+  --accent-soft: #e6a271;     /* softer warm gold */
+  --hair: rgba(241, 231, 218, 0.13);
+  --hair-strong: rgba(241, 231, 218, 0.26);
+
+  --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --mono: ui-monospace, "Cascadia Code", "Cascadia Mono", "Segoe UI Mono", Consolas, monospace;
+
+  --maxw: 660px;
+  --pad: clamp(1.5rem, 5vw, 3rem);
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;      /* pins the footer below short pages */
+  font-family: var(--sans);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--ink);
+  background: var(--bg-0);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* Legibility insurance over busy footage — imperceptible over dark frames. */
+  text-shadow: 0 1px 2px rgba(8, 4, 2, 0.5);
+}
+
+/* The gutter sits outside the measure, not inside it, so the text column lands
+   at a true --maxw — the same 660px the hub's .screen gets from `main`'s
+   padding. Setting max-width to --maxw alone would render ~564px of text. */
+.wrapper {
+  width: 100%;
+  max-width: calc(var(--maxw) + var(--pad) * 2);
+  margin-inline: auto;
+  padding-inline: var(--pad);
+}
+
+::selection { background: rgba(216, 121, 76, 0.3); }
+
+/* ================= Atmosphere ================= */
+/* All three layers are fixed, so they hold still while a post scrolls. */
+
+.bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 130% at 72% 8%, var(--bg-2) 0%, transparent 46%),
+    linear-gradient(158deg, #241009 0%, var(--bg-1) 52%, var(--bg-0) 100%);
+}
+
+.bg__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: transparent;
+  filter: blur(4px) saturate(1.06) contrast(1.02);
+  transform: scale(1.09);      /* hides the soft blur edge */
+  opacity: 0;
+  transition: opacity 1.2s var(--ease);
+}
+.bg__video.is-ready { opacity: 1; }
+
+/* Heavier than the hub's scrim on purpose. There, the footage sits behind a
+   dozen words and is the point; here it sits behind a wall of body text and
+   has to recede far enough to read a thousand words over. Same colours, more
+   of them. */
+.bg__scrim {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(115% 95% at 26% 22%, rgba(16, 8, 4, 0.28) 0%, rgba(16, 8, 4, 0.80) 100%),
+    linear-gradient(185deg, rgba(16, 8, 4, 0.66) 0%, rgba(16, 8, 4, 0.60) 40%, rgba(16, 8, 4, 0.90) 100%);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ================= Header ================= */
+
+.site-header {
+  position: relative;
+  padding: clamp(1.6rem, 5vh, 2.6rem) 0 clamp(1.4rem, 4vh, 2rem);
+  border-bottom: 1px solid var(--hair);
+}
+.site-header .wrapper {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+/* The wordmark, scaled down from the hub's .hero__name. */
+.site-title {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.5rem, 4.5vw, 1.9rem);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+.site-title:hover,
+.site-title:focus-visible { color: var(--accent-soft); outline: none; }
+
+/* Nav in the hub's eyebrow voice: small, tracked, uppercase, faint. */
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.35rem;
+}
+.site-nav .page-link {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 2px;
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.site-nav .page-link:hover,
+.site-nav .page-link:focus-visible {
+  color: var(--accent-soft);
+  border-bottom-color: var(--hair-strong);
+  outline: none;
+}
+/* The one link that leaves the blog. */
+.site-nav .page-link--out { color: rgba(148, 121, 106, 0.72); }
+
+/* ================= Content shell ================= */
+
+.page-content {
+  flex: 1 0 auto;
+  padding: clamp(2.2rem, 7vh, 3.6rem) 0 clamp(3rem, 9vh, 5rem);
+}
+
+/* ================= Home: the post list ================= */
+
+/* minima's "Posts" heading, sized off the hub's .links__eyebrow so the two
+   read as one voice. */
+.post-list-heading {
+  margin: 0 0 1.4rem;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.post-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.post-list > li {
+  margin-bottom: clamp(1.5rem, 4vh, 2.1rem);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: rise 0.7s var(--ease) forwards;
+  animation-delay: var(--rise-delay, 0.2s);
+}
+
+.post-list .post-meta {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.post-list h3 {
+  margin: 0;
+  font-weight: 500;
+  font-size: 1rem;              /* the anchor carries the real size */
+}
+
+/* Title treatment lifted from the hub's .link__title, arrow and all. */
+.post-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.12rem, 2.5vw, 1.32rem);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+.post-link:hover,
+.post-link:focus-visible { color: var(--accent-soft); outline: none; }
+
+.post-link__arrow {
+  font-family: var(--sans);
+  font-size: 0.95em;
+  color: var(--ink-faint);
+  transform: translateX(-2px);
+  opacity: 0;
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease), color 0.25s var(--ease);
+}
+.post-link:hover .post-link__arrow,
+.post-link:focus-visible .post-link__arrow {
+  opacity: 1;
+  transform: translateX(2px);
+  color: var(--accent);
+}
+
+.rss-subscribe {
+  margin: clamp(2.2rem, 6vh, 3rem) 0 0;
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--hair);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.page-heading {
+  margin: 0 0 1.6rem;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.7rem, 5vw, 2.2rem);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* ================= Post & page ================= */
+
+.post-header { margin-bottom: clamp(1.8rem, 5vh, 2.5rem); }
+
+/* Echoes .hero__name — same serif, same negative tracking, a step down. */
+.post-title {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1.9rem, 5.5vw, 2.7rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.post-header .post-meta {
+  margin: 0.7rem 0 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Prose ---- */
+
+.post-content {
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--ink);
+}
+.post-content > *:first-child { margin-top: 0; }
+.post-content > *:last-child { margin-bottom: 0; }
+
+.post-content p,
+.post-content ul,
+.post-content ol,
+.post-content dl { margin: 0 0 1.25em; }
+
+.post-content h1,
+.post-content h2,
+.post-content h3,
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+  margin: 2.1em 0 0.65em;
+  font-family: var(--serif);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+.post-content h1 { font-size: 1.72rem; }
+.post-content h2 { font-size: 1.44rem; }
+.post-content h3 { font-size: 1.22rem; }
+.post-content h4 { font-size: 1.08rem; }
+/* Below h4 the serif stops reading as a heading; switch to the eyebrow voice. */
+.post-content h5,
+.post-content h6 {
+  font-family: var(--sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+/* Prose links stay visible rather than hover-only — minima underlines on hover,
+   which loses too many links against a busy background. */
+.post-content a,
+.post-nav__back,
+.rss-subscribe a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(216, 121, 76, 0.38);
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.post-content a:hover,
+.post-content a:focus-visible,
+.post-nav__back:hover,
+.post-nav__back:focus-visible,
+.rss-subscribe a:hover,
+.rss-subscribe a:focus-visible {
+  color: var(--accent-soft);
+  border-bottom-color: var(--accent-soft);
+  outline: none;
+}
+
+.post-content strong { font-weight: 600; color: var(--ink); }
+.post-content em { font-style: italic; }
+
+.post-content ul,
+.post-content ol { padding-left: 1.35em; }
+.post-content li { margin-bottom: 0.4em; }
+.post-content li::marker { color: var(--ink-faint); }
+
+/* Borrows the sub-tagline's voice: serif italic, dimmed, set apart. */
+.post-content blockquote {
+  margin: 1.6em 0;
+  padding: 0.1em 0 0.1em 1.15em;
+  border-left: 2px solid rgba(216, 121, 76, 0.42);
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink-dim);
+}
+.post-content blockquote > *:last-child { margin-bottom: 0; }
+
+.post-content hr {
+  margin: 2.4em 0;
+  border: 0;
+  border-top: 1px solid var(--hair);
+}
+
+.post-content img,
+.post-content video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.6em 0;
+  border-radius: 9px;
+  border: 1px solid var(--hair);
+}
+
+.post-content figure { margin: 1.6em 0; }
+.post-content figcaption {
+  margin-top: 0.5rem;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-faint);
+  text-align: center;
+  text-shadow: none;
+}
+
+/* ---- Tables ---- */
+
+.post-content table {
+  width: 100%;
+  margin: 1.6em 0;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.post-content th,
+.post-content td {
+  padding: 0.55em 0.75em;
+  text-align: left;
+  border-bottom: 1px solid var(--hair);
+}
+.post-content th {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  border-bottom-color: var(--hair-strong);
+}
+.post-content td { color: var(--ink-dim); }
+
+/* ---- Code ---- */
+
+.post-content code {
+  font-family: var(--mono);
+  font-size: 0.87em;
+  text-shadow: none;
+}
+
+/* Inline: a warm tint, enough to separate it without becoming a button. */
+.post-content :not(pre) > code {
+  padding: 0.14em 0.4em;
+  border-radius: 4px;
+  background: rgba(216, 121, 76, 0.12);
+  border: 1px solid rgba(216, 121, 76, 0.16);
+  color: var(--accent-soft);
+}
+
+/* Blocks: the same recessed panel the hub uses for its project cards. Long
+   lines scroll inside the block rather than widening the page. */
+.post-content pre,
+.post-content .highlight,
+.post-content .highlighter-rouge {
+  margin: 1.6em 0;
+}
+.post-content pre {
+  padding: 0.95rem 1.1rem;
+  overflow-x: auto;
+  font-family: var(--mono);   /* a <pre> with no <code> child would fall back to UA monospace */
+  border: 1px solid rgba(216, 121, 76, 0.18);
+  border-radius: 9px;
+  background: linear-gradient(165deg, rgba(30, 15, 10, 0.72), rgba(14, 8, 5, 0.78));
+  font-size: 0.84rem;
+  line-height: 1.6;
+  color: var(--ink);
+  text-shadow: none;
+  -webkit-overflow-scrolling: touch;
+}
+.post-content pre > code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+}
+/* Rouge nests .highlight inside .highlighter-rouge; flatten the double box. */
+.post-content .highlight { background: none; }
+.post-content .highlight pre { margin: 0; }
+
+/* ---- Rouge tokens, warm ---- */
+
+.highlight .c, .highlight .c1, .highlight .cm, .highlight .cs,
+.highlight .cd { color: #8a6f60; font-style: italic; }        /* comment */
+.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp,
+.highlight .kr, .highlight .kt, .highlight .kc { color: #e6a271; }  /* keyword */
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sb,
+.highlight .sc, .highlight .sd, .highlight .se, .highlight .sh,
+.highlight .si, .highlight .sx, .highlight .sr { color: #b9c98a; }  /* string */
+.highlight .m, .highlight .mi, .highlight .mf, .highlight .mh,
+.highlight .mo, .highlight .il { color: #d8945c; }            /* number */
+.highlight .nf, .highlight .nd { color: #79c2cf; }            /* function */
+.highlight .nc, .highlight .nn, .highlight .no { color: #e6b877; }  /* class / const */
+.highlight .nt { color: #d8794c; }                            /* tag */
+.highlight .na { color: #c8b3a3; }                            /* attribute */
+.highlight .nv, .highlight .vi, .highlight .vg { color: #f1e7da; }  /* variable */
+.highlight .o, .highlight .ow, .highlight .p { color: #c8b3a3; }    /* operator */
+.highlight .gd { color: #e07a6a; }                            /* diff — */
+.highlight .gi { color: #9fc48a; }                            /* diff + */
+.highlight .gh, .highlight .gu { color: #94796a; }
+.highlight .err { color: #e07a4e; }
+
+/* ---- Back link ---- */
+
+.post-nav {
+  margin-top: clamp(2.4rem, 7vh, 3.4rem);
+  padding-top: 1.3rem;
+  border-top: 1px solid var(--hair);
+}
+.post-nav__back {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-bottom-color: transparent;
+}
+.post-nav__back:hover,
+.post-nav__back:focus-visible { border-bottom-color: rgba(230, 162, 113, 0.5); }
+
+/* ================= Footer ================= */
+
+.site-footer {
+  flex-shrink: 0;
+  padding: clamp(2rem, 6vh, 3rem) 0 clamp(2.4rem, 7vh, 3.4rem);
+  border-top: 1px solid var(--hair);
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+}
+
+.footer-heading {
+  margin: 0 0 1.3rem;
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.1rem;
+  letter-spacing: -0.01em;
+  color: var(--ink-dim);
+}
+
+.footer-col-wrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+}
+@media (min-width: 34rem) {
+  .footer-col-wrapper { grid-template-columns: 1fr 1fr 1.3fr; gap: 1.5rem; }
+}
+
+.contact-list,
+.social-media-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.contact-list li,
+.social-media-list li { margin-bottom: 0.4rem; }
+
+.site-footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ink-dim);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.site-footer a:hover,
+.site-footer a:focus-visible {
+  color: var(--accent-soft);
+  border-bottom-color: var(--hair-strong);
+  outline: none;
+}
+
+.social-icon {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+  fill: currentColor;
+}
+
+.footer-col-3 p { margin: 0; line-height: 1.6; }
+
+/* ================= Motion ================= */
+
+@keyframes rise {
+  to { opacity: 1; transform: none; }
+}
+
+/* Same posture as the hub: kill the motion, keep the design. The video is
+   hidden rather than paused, so the gradient shows instead. */
+@media (prefers-reduced-motion: reduce) {
+  .bg__video { display: none; }
+  .post-list > li,
+  .post-link__arrow,
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+  /* The entries can't fade in without animation, so land them visible.
+     The arrow stays hover-only — it just arrives without the slide. */
+  .post-list > li { opacity: 1; transform: none; }
+}

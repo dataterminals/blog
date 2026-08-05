@@ -1,0 +1,16 @@
+<!-- The hub's atmosphere, carried over intact: blurred looping clip, tinted
+     fallback, scrim, film grain. All three layers are position:fixed, so they
+     hold still while a post scrolls past them.
+
+     The clips are copies of the hub's assets/ files, not references to them —
+     this repo stays self-contained and previews correctly offline. If you swap
+     the loop on the landing page, copy the new files here too. -->
+<div class="bg" aria-hidden="true">
+  <video class="bg__video" autoplay muted loop playsinline preload="auto"
+         poster="{{ '/assets/poster.jpg' | relative_url }}">
+    <source src="{{ '/assets/bg.webm' | relative_url }}" type="video/webm">
+    <source src="{{ '/assets/bg.mp4' | relative_url }}" type="video/mp4">
+  </video>
+</div>
+<div class="bg__scrim" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>

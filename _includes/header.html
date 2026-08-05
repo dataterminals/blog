@@ -1,0 +1,22 @@
+<!-- minima's site-header: wordmark left, nav right. Any page carrying a `title`
+     in its front matter joins the nav automatically, so adding one is a matter
+     of dropping a .md file in the root. Order with `nav_order`, opt out with
+     `nav_exclude: true` (which is how 404.md stays out of it).
+
+     minima collapses this into a hamburger below 600px via a checkbox hack.
+     With two links it's cheaper to let them wrap, so that machinery is gone. -->
+<header class="site-header" role="banner">
+  <div class="wrapper">
+    <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+
+    <nav class="site-nav" aria-label="Site">
+      {%- assign nav_pages = site.pages | where_exp: "p", "p.title" | where_exp: "p", "p.nav_exclude != true" | sort: "nav_order" -%}
+      {%- for p in nav_pages -%}
+        <a class="page-link" href="{{ p.url | relative_url }}">{{ p.title }}</a>
+      {%- endfor -%}
+      {%- if site.home_url -%}
+        <a class="page-link page-link--out" href="{{ site.home_url }}">the hub</a>
+      {%- endif -%}
+    </nav>
+  </div>
+</header>

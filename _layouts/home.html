@@ -1,0 +1,38 @@
+---
+layout: default
+---
+
+<div class="home">
+  {%- if page.title -%}
+  <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+  {{ content }}
+
+  {%- if site.posts.size > 0 -%}
+  <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+
+  <ul class="post-list">
+    {%- for post in site.posts -%}
+    {%- comment -%}
+      Stagger the entries in on load, the way the hub ladders its project cards.
+      Capped so a long archive's last entry isn't still waiting seconds later.
+    {%- endcomment -%}
+    {%- assign delay = forloop.index0 | times: 50 | plus: 100 -%}
+    {%- if delay > 640 -%}{%- assign delay = 640 -%}{%- endif -%}
+    <li style="--rise-delay: {{ delay }}ms">
+      <span class="post-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+      </span>
+      <h3>
+        <a class="post-link" href="{{ post.url | relative_url }}">
+          {{ post.title | escape }}<span class="post-link__arrow" aria-hidden="true">→</span>
+        </a>
+      </h3>
+    </li>
+    {%- endfor -%}
+  </ul>
+
+  <p class="rss-subscribe">subscribe <a href="{{ '/feed.xml' | relative_url }}">via RSS</a></p>
+  {%- endif -%}
+</div>
