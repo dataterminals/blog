@@ -4,12 +4,11 @@
 
 # ---- Identity -------------------------------------------------------------
 # `title` is the header wordmark and the footer heading.
-# `description` is the footer's third column (minima's tagline slot) and the
-# feed/SEO description. Both are placeholders borrowed from the hub's own
-# <meta description> — swap them for blog-specific copy when you have it.
+# `description` is the footer's tagline slot and the feed/SEO description,
+# matching the hub's own <meta description>.
 title: dataterminals
 description: >-
-  Mods, tools & datamining for the games we play.
+  to sparkle in the rubble
 
 # Footer contact line. Deliberately unset: minima prints this address in plain
 # text on every page. Uncomment only if you want it public.
