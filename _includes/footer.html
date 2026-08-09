@@ -1,20 +1,22 @@
-<!-- minima's three-column h-card footer: name/contact, social, tagline.
+<!-- minima's h-card footer, centred: wordmark, then social + tagline in a row.
+     minima's name/contact column is gone — it only ever repeated the heading
+     above it, so `p-name` moved onto the heading and the column now renders
+     solely when `email` is set in _config.yml.
      The GitHub mark is the same path the hub's link shelf uses. -->
 <footer class="site-footer h-card" role="contentinfo">
   <data class="u-url" href="{{ '/' | relative_url }}"></data>
 
   <div class="wrapper">
-    <h2 class="footer-heading">{{ site.title }}</h2>
+    <h2 class="footer-heading p-name">{{ site.title }}</h2>
 
     <div class="footer-col-wrapper">
+      {%- if site.email -%}
       <div class="footer-col footer-col-1">
         <ul class="contact-list">
-          <li class="p-name">{{ site.title }}</li>
-          {%- if site.email -%}
           <li><a class="u-email" href="mailto:{{ site.email }}">{{ site.email }}</a></li>
-          {%- endif -%}
         </ul>
       </div>
+      {%- endif -%}
 
       <div class="footer-col footer-col-2">
         <ul class="social-media-list">

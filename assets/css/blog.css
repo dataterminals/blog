@@ -540,16 +540,27 @@ body {
   font-weight: 500;
   font-size: 1.1rem;
   letter-spacing: -0.01em;
+  text-align: center;
   color: var(--ink-dim);
 }
 
+/* Two short cells left after minima's name column went — a centred stack that
+   becomes a centred row once there's width for it, rather than a grid whose
+   tracks would strand them at the edges. */
 .footer-col-wrapper {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 1.2rem;
+  text-align: center;
 }
 @media (min-width: 34rem) {
-  .footer-col-wrapper { grid-template-columns: 1fr 1fr 1.3fr; gap: 1.5rem; }
+  .footer-col-wrapper {
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
 }
 
 .contact-list,
@@ -558,8 +569,18 @@ body {
   padding: 0;
   list-style: none;
 }
-.contact-list li,
-.social-media-list li { margin-bottom: 0.4rem; }
+.contact-list li { margin-bottom: 0.4rem; }
+.contact-list li:last-child { margin-bottom: 0; }
+
+/* Laid out along the row so the pair reads as one centred line beside the
+   tagline instead of a stacked column with a short line next to it. */
+.social-media-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4rem 1.1rem;
+}
+.social-media-list li { margin-bottom: 0; }
 
 .site-footer a {
   display: inline-flex;
