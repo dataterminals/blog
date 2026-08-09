@@ -3,6 +3,11 @@ _site/
 .jekyll-metadata
 .sass-cache/
 
+# Local gem install (`bundle config set --local path vendor/bundle`). Pages
+# builds with its own bundle, so these are preview-only.
+vendor/
+.bundle/
+
 # GitHub Pages resolves its own gem versions and ignores this file, so
 # committing it only invites drift between local and deployed builds.
 Gemfile.lock
