@@ -534,55 +534,28 @@ body {
   color: var(--ink-faint);
 }
 
+/* Wordmark, tagline, shelf — one centred column. */
+.site-footer .wrapper { text-align: center; }
+
 .footer-heading {
-  margin: 0 0 1.3rem;
+  margin: 0 0 0.4rem;
   font-family: var(--serif);
   font-weight: 500;
   font-size: 1.1rem;
   letter-spacing: -0.01em;
-  text-align: center;
   color: var(--ink-dim);
 }
 
-/* Two short cells left after minima's name column went — a centred stack that
-   becomes a centred row once there's width for it, rather than a grid whose
-   tracks would strand them at the edges. */
-.footer-col-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-  text-align: center;
-}
-@media (min-width: 34rem) {
-  .footer-col-wrapper {
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-  }
+.footer-tagline {
+  margin: 0 0 1.6rem;
+  line-height: 1.6;
 }
 
-.contact-list,
-.social-media-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.contact-list li { margin-bottom: 0.4rem; }
-.contact-list li:last-child { margin-bottom: 0; }
+.footer-email { margin: 0 0 1.4rem; }
 
-/* Laid out along the row so the pair reads as one centred line beside the
-   tagline instead of a stacked column with a short line next to it. */
-.social-media-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.4rem 1.1rem;
-}
-.social-media-list li { margin-bottom: 0; }
-
-.site-footer a {
+/* The shelf links opt out: an underline drawn under a floating icon tracks the
+   float rather than the glyph, and the border would pad the icon's box. */
+.site-footer a:not(.shelf__link) {
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
@@ -591,26 +564,125 @@ body {
   border-bottom: 1px solid transparent;
   transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
 }
-.site-footer a:hover,
-.site-footer a:focus-visible {
+.site-footer a:not(.shelf__link):hover,
+.site-footer a:not(.shelf__link):focus-visible {
   color: var(--accent-soft);
   border-bottom-color: var(--hair-strong);
   outline: none;
 }
 
-.social-icon {
-  width: 15px;
-  height: 15px;
-  flex: 0 0 auto;
-  fill: currentColor;
+/* ---- External-link shelf ---- */
+/* Lifted wholesale from the hub's styles.css, minus its .elsewhere wrapper —
+   here the footer owns the spacing. Keep the two in step. */
+.shelf {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1.5rem, 6vw, 3rem);
+}
+/* Seven icons need less air than six did. At 375px the row came to 327.75px
+   against a 327px column — over by a hair, which drops the last icon onto a
+   line of its own and reads as a mistake rather than a wrap. Narrow screens
+   only; the gap above 416px is untouched. */
+@media (max-width: 26rem) {
+  .shelf { gap: clamp(0.8rem, 4.2vw, 1.5rem); }
 }
 
-.footer-col-3 p { margin: 0; line-height: 1.6; }
+.shelf__link {
+  /* Per-icon float + flicker timing is set by :nth-child below, so no two
+     glow-flicker in unison. */
+  --gd: 9s;    /* float duration  */
+  --ff: 7s;    /* flicker duration */
+  display: inline-flex;
+  width: clamp(26px, 7vw, 30px);
+  height: clamp(26px, 7vw, 30px);
+  color: var(--ink-dim);
+  will-change: transform, opacity;
+  animation: shelf-float var(--gd) ease-in-out infinite, shelf-flicker var(--ff) ease-in-out infinite;
+  animation-delay: var(--fd1, 0s), var(--fd2, 0s);
+  transition: color 0.3s var(--ease);
+}
+.shelf__link:hover,
+.shelf__link:focus-visible { color: var(--accent-soft); outline: none; }
+
+/* The icon carries the faint glow (and the hover lift) so it never fights the
+   float animation, which owns the link's transform. */
+.shelf__icon {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 0 5px rgba(216, 121, 76, 0.28)) drop-shadow(0 1px 2px rgba(8, 4, 2, 0.5));
+  transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
+}
+.shelf__icon--fill { fill: currentColor; }
+.shelf__icon--stroke { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.shelf__link:hover .shelf__icon,
+.shelf__link:focus-visible .shelf__icon {
+  transform: translateY(-3px) scale(1.1);
+  filter: drop-shadow(0 0 8px rgba(230, 162, 113, 0.6)) drop-shadow(0 0 16px rgba(216, 121, 76, 0.35));
+}
+
+/* desynced timings — non-harmonic durations + offset phases */
+.shelf__link:nth-child(1) { --gd: 9.5s;  --ff: 6.3s; --fd1: -1.2s; --fd2: -0.4s; }
+.shelf__link:nth-child(2) { --gd: 11s;   --ff: 7.7s; --fd1: -4.6s; --fd2: -3.1s; }
+.shelf__link:nth-child(3) { --gd: 8.5s;  --ff: 9.1s; --fd1: -2.3s; --fd2: -6.2s; }
+.shelf__link:nth-child(4) { --gd: 12s;   --ff: 6.9s; --fd1: -7.1s; --fd2: -1.9s; }
+.shelf__link:nth-child(5) { --gd: 10s;   --ff: 8.3s; --fd1: -5.4s; --fd2: -4.7s; }
+.shelf__link:nth-child(6) { --gd: 10.7s; --ff: 7.2s; --fd1: -3.8s; --fd2: -8.5s; }
+.shelf__link:nth-child(7) { --gd: 9.2s;  --ff: 8.8s; --fd1: -6.5s; --fd2: -2.6s; }
+
+/* Cursor-anchored leader-line readout (replaces the native tooltip), styled to
+   the hub's tarot signature diagram: thin line → node → monospace name + URL. */
+.shelf-tip {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 60;
+  overflow: visible;
+  opacity: 0;
+  transition: opacity 0.18s var(--ease);
+}
+.shelf-tip.is-on { opacity: 1; }
+.shelf-tip__line { stroke: var(--hair-strong); stroke-width: 1; }
+.shelf-tip__line, .shelf-tip__node { filter: drop-shadow(0 0 4px rgba(216, 121, 76, 0.35)); }
+.shelf-tip__node { fill: var(--accent-soft); }
+.shelf-tip__tick { fill: var(--ink-faint); }
+.shelf-tip__name, .shelf-tip__url {
+  font-family: var(--mono);
+  paint-order: stroke;               /* dark halo so the text reads over footage */
+  stroke: rgba(8, 4, 2, 0.66);
+  stroke-width: 2.6px;
+  stroke-linejoin: round;
+}
+.shelf-tip__name { font-size: 11px; fill: var(--ink-dim); }
+.shelf-tip__url  { font-size: 8.5px; fill: var(--ink-faint); letter-spacing: 0.02em; }
 
 /* ================= Motion ================= */
 
 @keyframes rise {
   to { opacity: 1; transform: none; }
+}
+
+@keyframes shelf-float {
+  0%   { transform: translate3d(0, 0, 0) rotate(0deg); }
+  25%  { transform: translate3d(1.5px, -3px, 0) rotate(0.4deg); }
+  50%  { transform: translate3d(-1px, 2px, 0) rotate(-0.3deg); }
+  75%  { transform: translate3d(-2px, -1.5px, 0) rotate(0.25deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+@keyframes shelf-flicker {
+  0%, 100% { opacity: 0.9; }
+  8%   { opacity: 0.6; }
+  9%   { opacity: 0.9; }
+  42%  { opacity: 0.96; }
+  44%  { opacity: 0.68; }
+  46%  { opacity: 0.9; }
+  72%  { opacity: 0.85; }
+  73.5%{ opacity: 0.66; }
+  75%  { opacity: 0.9; }
 }
 
 /* Same posture as the hub: kill the motion, keep the design. The video is
