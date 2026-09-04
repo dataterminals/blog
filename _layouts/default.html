@@ -17,6 +17,8 @@
 
   {%- assign v = site.time | date: '%s' -%}
   <script src="{{ '/assets/js/bg.js' | relative_url }}?v={{ v }}"></script>
+  <!-- tip.js owns the shared hover readout; shelf.js binds to it. -->
+  <script src="{{ '/assets/js/tip.js' | relative_url }}?v={{ v }}"></script>
   <script src="{{ '/assets/js/shelf.js' | relative_url }}?v={{ v }}"></script>
 </body>
 </html>

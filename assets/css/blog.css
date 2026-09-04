@@ -174,8 +174,24 @@ body {
   border-bottom-color: var(--hair-strong);
   outline: none;
 }
-/* The one link that leaves the blog. */
-.site-nav .page-link--out { color: rgba(148, 121, 106, 0.72); }
+/* The one link that leaves the blog — and, since the wordmark beside it goes to
+   /blog/ rather than to the hub, the only route home from the top of the page.
+   So it reads brighter than the in-site links, not dimmer, and carries an arrow:
+   without one, "the hub" is just another destination in a list. */
+.site-nav .page-link--out {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  color: var(--ink-dim);
+}
+.page-link__back {
+  font-size: 1.15em;
+  line-height: 1;
+  color: var(--accent);
+  transition: transform 0.25s var(--ease);
+}
+.site-nav .page-link--out:hover .page-link__back,
+.site-nav .page-link--out:focus-visible .page-link__back { transform: translateX(-3px); }
 
 /* ================= Content shell ================= */
 
@@ -633,8 +649,14 @@ body {
 .shelf__link:nth-child(7) { --gd: 9.2s;  --ff: 8.8s; --fd1: -6.5s; --fd2: -2.6s; }
 
 /* Cursor-anchored leader-line readout (replaces the native tooltip), styled to
-   the hub's tarot signature diagram: thin line → node → monospace name + URL. */
-.shelf-tip {
+   the hub's tarot signature diagram: thin line → node → label. Carried over from
+   the hub alongside tip.js, same rule as the shelf itself — change it there,
+   change it here.
+
+   The leader is SVG; the label is an HTML box, so it can carry a darker
+   translucent ground. Bare text over the video loop only reads when the frame
+   behind it happens to be dark. */
+.tip__leader {
   position: fixed;
   inset: 0;
   width: 100%;
@@ -645,20 +667,58 @@ body {
   opacity: 0;
   transition: opacity 0.18s var(--ease);
 }
-.shelf-tip.is-on { opacity: 1; }
-.shelf-tip__line { stroke: var(--hair-strong); stroke-width: 1; }
-.shelf-tip__line, .shelf-tip__node { filter: drop-shadow(0 0 4px rgba(216, 121, 76, 0.35)); }
-.shelf-tip__node { fill: var(--accent-soft); }
-.shelf-tip__tick { fill: var(--ink-faint); }
-.shelf-tip__name, .shelf-tip__url {
-  font-family: var(--mono);
-  paint-order: stroke;               /* dark halo so the text reads over footage */
-  stroke: rgba(8, 4, 2, 0.66);
-  stroke-width: 2.6px;
-  stroke-linejoin: round;
+.tip__leader.is-on { opacity: 1; }
+.tip__line { stroke: var(--hair-strong); stroke-width: 1; }
+.tip__line, .tip__node { filter: drop-shadow(0 0 4px rgba(216, 121, 76, 0.35)); }
+.tip__node { fill: var(--accent-soft); }
+.tip__tick { fill: var(--ink-faint); }
+
+/* Placed by transform from the viewport origin. Faded rather than displayed
+   away, so tip.js can measure it before a readout's first paint. */
+.tip__box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 61;
+  pointer-events: none;
+  max-width: min(16rem, calc(100vw - 1rem));
+  padding: 0.42rem 0.6rem 0.46rem;
+  border: 1px solid var(--hair);
+  border-radius: 7px;
+  background: rgba(12, 6, 3, 0.82);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  text-shadow: none;                 /* the ground does the legibility work now */
+  opacity: 0;
+  transition: opacity 0.18s var(--ease);
 }
-.shelf-tip__name { font-size: 11px; fill: var(--ink-dim); }
-.shelf-tip__url  { font-size: 8.5px; fill: var(--ink-faint); letter-spacing: 0.02em; }
+.tip__box.is-on { opacity: 1; }
+/* A name + url stays narrow; a description needs the room. Nothing on the blog
+   passes a body today — the rule is here so the two copies stay identical. */
+.tip__box--wide { max-width: min(21.5rem, calc(100vw - 1rem)); }
+
+.tip__title {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--ink-dim);
+}
+.tip__sub {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--ink-faint);
+}
+.tip__body {
+  margin-top: 0.4rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid var(--hair);
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--ink-dim);
+}
 
 /* ================= Motion ================= */
 

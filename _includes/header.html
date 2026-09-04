@@ -15,7 +15,14 @@
         <a class="page-link" href="{{ p.url | relative_url }}">{{ p.title }}</a>
       {%- endfor -%}
       {%- if site.home_url -%}
-        <a class="page-link page-link--out" href="{{ site.home_url }}">the hub</a>
+        <!-- The way back. The wordmark beside it goes to /blog/, not to the hub,
+             so this is the only route home from the top of the page: it carries
+             an arrow and brighter ink than the in-site links, where it used to
+             carry dimmer ink and read as merely de-emphasised. The footer shelf
+             offers the same destination at the other end of the page. -->
+        <a class="page-link page-link--out" href="{{ site.home_url }}">
+          <span class="page-link__back" aria-hidden="true">&#8592;</span>the hub
+        </a>
       {%- endif -%}
     </nav>
   </div>

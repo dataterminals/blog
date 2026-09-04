@@ -71,12 +71,29 @@ with `--drafts`.
 Without Ruby you can still write and push; Pages builds it either way. You just
 won't see it until it deploys.
 
-## The one thing that lives in two repos
+## Getting back to the hub
+
+Two routes, one at each end of the page, because a reader arrives at the top and
+leaves from wherever they stopped reading:
+
+- **The header's `← the hub` link**, rendered whenever `_config.yml` sets
+  `home_url`. It takes brighter ink than the in-site nav links and carries an
+  arrow — the wordmark beside it goes to `/blog/`, not to the hub, so this is the
+  only way home from the top.
+- **The footer shelf's house icon.** Where the hub's own shelf carries the Blog
+  icon, this one carries the hub, since each site's own entry would only point at
+  the page you're already standing on. It's the one deliberate difference between
+  the two copies of the shelf, and the only link in it that stays in this tab.
+
+## The things that live in two repos
 
 `assets/css/blog.css` opens with a copy of the landing page's design tokens —
 the palette, the type stacks, `--maxw`, `--ease` — and `assets/bg.webm`,
-`bg.mp4` and `poster.jpg` are copies of the hub's media. Nothing keeps either
-in sync. Retune the palette or swap the loop over there, and copy it here.
+`bg.mp4` and `poster.jpg` are copies of the hub's media. So are the footer's
+link shelf and the pair of scripts behind it: `assets/js/tip.js` (the shared
+cursor-anchored hover readout) and `assets/js/shelf.js` (which binds the shelf
+to it). Nothing keeps any of it in sync. Retune the palette, swap the loop, or
+change the shelf over there, and copy it here.
 
 That duplication is the cost of the blog being its own repo. It buys the
 landing page's zero-build promise back.
