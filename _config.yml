@@ -16,7 +16,9 @@ description: >-
 
 github_username: dataterminals
 
-# Rendered as the header's "the hub" link, back to the landing page.
+# The landing page. Rendered as the header's "the hub" link back to it, and the
+# base the house style is loaded from — house.css, theme.js and the background
+# clips all come off the hub rather than living here. Keep the trailing slash.
 home_url: "https://dataterminals.github.io/"
 
 # ---- Where it lives -------------------------------------------------------

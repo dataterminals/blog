@@ -2,13 +2,16 @@
    ------------------------------------------------------------------------
    minima's markup and class names, wearing the hub's house style.
 
-   Everything under "Tokens" and "Atmosphere" is copied from
-   dataterminals.github.io/styles.css. That duplication is the price of the
-   blog being its own repo — when you retune the palette on the hub, retune it
-   here. Nothing else in this file exists over there.
+   The house style itself isn't here. The palettes (all six of the hub's
+   themes), the background layers, the theme switch and the post prose come
+   from the hub's own house.css, loaded just before this file, so retuning a
+   theme there retunes it here too and the two sites can't drift apart. What's
+   left is this site's own: minima's header, post list and footer, set in the
+   hub's tokens — `rgba(var(--accent-rgb), 0.4)` rather than a hue — so every
+   rule follows whichever theme is mounted.
 
    The translation, minima → house:
-     #fdfdfd page      → the oxblood gradient + video
+     #fdfdfd page      → the theme's gradient + video
      #111    text      → --ink
      #828282 meta      → --ink-faint
      #2a7ae2 links     → --accent
@@ -17,19 +20,34 @@
      sans headings     → --serif for titles, tracked --sans for meta
    ---------------------------------------------------------------------- */
 
-/* ================= Tokens ================= */
+/* ================= Floor ================= */
+/* house.css comes off the hub. If it can't be reached — a local preview with
+   no network, say — this keeps the page readable in the default ember palette:
+   the tokens under :where(), which scores nothing, so house.css's own statement
+   of them wins whenever it loads, and the background layers out of the flow.
+   A floor, not a copy to keep in step: the hub's values win the moment they
+   arrive, retuned or not. */
+:where(:root) {
+  --bg-0: #100804;
+  --ink-rgb: 241, 231, 218;
+  --ink-dim: #c8b3a3;
+  --ink-faint-rgb: 148, 121, 106;
+  --accent-rgb: 216, 121, 76;
+  --accent-soft-rgb: 230, 162, 113;
+  --shade-rgb: 8, 4, 2;
+  --ground-rgb: 16, 8, 4;
+  --well-rgb: 12, 6, 3;
+  --scrim-edge: 0.70;
+  --scrim-top: 0.50;
+  --scrim-mid: 0.40;
+  --scrim-foot: 0.86;
 
-:root {
-  --bg-0: #100804;            /* deepest warm black */
-  --bg-1: #1c0f0a;            /* oxblood base */
-  --bg-2: #2a140d;            /* warmer highlight for the gradient */
-  --ink: #f1e7da;             /* warm bone — primary text */
-  --ink-dim: #c8b3a3;         /* muted taupe — secondary */
-  --ink-faint: #94796a;       /* faint — meta */
-  --accent: #d8794c;          /* terracotta ember — links / hover */
-  --accent-soft: #e6a271;     /* softer warm gold */
-  --hair: rgba(241, 231, 218, 0.13);
-  --hair-strong: rgba(241, 231, 218, 0.26);
+  --ink: rgb(var(--ink-rgb));
+  --ink-faint: rgb(var(--ink-faint-rgb));
+  --accent: rgb(var(--accent-rgb));
+  --accent-soft: rgb(var(--accent-soft-rgb));
+  --hair: rgba(var(--ink-rgb), 0.13);
+  --hair-strong: rgba(var(--ink-rgb), 0.26);
 
   --serif: ui-serif, "Iowan Old Style", "Palatino Linotype", Georgia, "Times New Roman", serif;
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -39,6 +57,8 @@
   --pad: clamp(1.5rem, 5vw, 3rem);
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
+:where(.bg, .bg__scrim, .grain) { position: fixed; inset: 0; z-index: -2; pointer-events: none; }
+:where(.prose a) { color: var(--accent); }
 
 * { box-sizing: border-box; }
 
@@ -57,7 +77,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   /* Legibility insurance over busy footage — imperceptible over dark frames. */
-  text-shadow: 0 1px 2px rgba(8, 4, 2, 0.5);
+  text-shadow: 0 1px 2px rgba(var(--shade-rgb), 0.5);
 }
 
 /* The gutter sits outside the measure, not inside it, so the text column lands
@@ -70,57 +90,20 @@ body {
   padding-inline: var(--pad);
 }
 
-::selection { background: rgba(216, 121, 76, 0.3); }
+::selection { background: rgba(var(--accent-rgb), 0.3); }
 
 /* ================= Atmosphere ================= */
-/* All three layers are fixed, so they hold still while a post scrolls. */
-
-.bg {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  overflow: hidden;
-  background:
-    radial-gradient(120% 130% at 72% 8%, var(--bg-2) 0%, transparent 46%),
-    linear-gradient(158deg, #241009 0%, var(--bg-1) 52%, var(--bg-0) 100%);
-}
-
-.bg__video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: transparent;
-  filter: blur(4px) saturate(1.06) contrast(1.02);
-  transform: scale(1.09);      /* hides the soft blur edge */
-  opacity: 0;
-  transition: opacity 1.2s var(--ease);
-}
-.bg__video.is-ready { opacity: 1; }
-
-/* Heavier than the hub's scrim on purpose. There, the footage sits behind a
-   dozen words and is the point; here it sits behind a wall of body text and
-   has to recede far enough to read a thousand words over. Same colours, more
-   of them. */
+/* The layers themselves are house.css's. One difference: this scrim is heavier
+   than the hub's, on purpose. There, the footage sits behind a dozen words and
+   is the point; here it sits behind a wall of body text and has to recede far
+   enough to read a thousand words over. So it's the mounted theme's own scrim —
+   its colour, its alphas, which already differ from clip to clip — with the
+   same amount more laid on at every stop. On ember that lands exactly on the
+   values this site shipped with. */
 .bg__scrim {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
   background:
-    radial-gradient(115% 95% at 26% 22%, rgba(16, 8, 4, 0.28) 0%, rgba(16, 8, 4, 0.80) 100%),
-    linear-gradient(185deg, rgba(16, 8, 4, 0.66) 0%, rgba(16, 8, 4, 0.60) 40%, rgba(16, 8, 4, 0.90) 100%);
-}
-
-.grain {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.05;
-  mix-blend-mode: soft-light;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    radial-gradient(115% 95% at 26% 22%, rgba(var(--ground-rgb), 0.28) 0%, rgba(var(--ground-rgb), calc(var(--scrim-edge) + 0.1)) 100%),
+    linear-gradient(185deg, rgba(var(--ground-rgb), calc(var(--scrim-top) + 0.16)) 0%, rgba(var(--ground-rgb), calc(var(--scrim-mid) + 0.2)) 40%, rgba(var(--ground-rgb), calc(var(--scrim-foot) + 0.04)) 100%);
 }
 
 /* ================= Header ================= */
@@ -319,60 +302,16 @@ body {
 }
 
 /* ---- Prose ---- */
-
-.post-content {
-  font-size: 1.02rem;
-  line-height: 1.75;
-  color: var(--ink);
-}
-.post-content > *:first-child { margin-top: 0; }
-.post-content > *:last-child { margin-bottom: 0; }
-
-.post-content p,
-.post-content ul,
-.post-content ol,
-.post-content dl { margin: 0 0 1.25em; }
-
-.post-content h1,
-.post-content h2,
-.post-content h3,
-.post-content h4,
-.post-content h5,
-.post-content h6 {
-  margin: 2.1em 0 0.65em;
-  font-family: var(--serif);
-  font-weight: 500;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  color: var(--ink);
-  text-wrap: balance;
-}
-.post-content h1 { font-size: 1.72rem; }
-.post-content h2 { font-size: 1.44rem; }
-.post-content h3 { font-size: 1.22rem; }
-.post-content h4 { font-size: 1.08rem; }
-/* Below h4 the serif stops reading as a heading; switch to the eyebrow voice. */
-.post-content h5,
-.post-content h6 {
-  font-family: var(--sans);
-  font-size: 0.72rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ink-dim);
-}
-
-/* Prose links stay visible rather than hover-only — minima underlines on hover,
-   which loses too many links against a busy background. */
-.post-content a,
+/* The post body is .prose, from the hub's house.css — the same rules that set
+   this post in the blog viewer at the foot of the hub, so it reads the same in
+   both places. Only the two links around it are this site's. */
 .post-nav__back,
 .rss-subscribe a {
   color: var(--accent);
   text-decoration: none;
-  border-bottom: 1px solid rgba(216, 121, 76, 0.38);
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.38);
   transition: color 0.25s var(--ease), border-color 0.25s var(--ease);
 }
-.post-content a:hover,
-.post-content a:focus-visible,
 .post-nav__back:hover,
 .post-nav__back:focus-visible,
 .rss-subscribe a:hover,
@@ -381,148 +320,6 @@ body {
   border-bottom-color: var(--accent-soft);
   outline: none;
 }
-
-.post-content strong { font-weight: 600; color: var(--ink); }
-.post-content em { font-style: italic; }
-
-.post-content ul,
-.post-content ol { padding-left: 1.35em; }
-.post-content li { margin-bottom: 0.4em; }
-.post-content li::marker { color: var(--ink-faint); }
-
-/* Borrows the sub-tagline's voice: serif italic, dimmed, set apart. */
-.post-content blockquote {
-  margin: 1.6em 0;
-  padding: 0.1em 0 0.1em 1.15em;
-  border-left: 2px solid rgba(216, 121, 76, 0.42);
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--ink-dim);
-}
-.post-content blockquote > *:last-child { margin-bottom: 0; }
-
-.post-content hr {
-  margin: 2.4em 0;
-  border: 0;
-  border-top: 1px solid var(--hair);
-}
-
-.post-content img,
-.post-content video {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: 1.6em auto;
-  border-radius: 9px;
-  border: 1px solid var(--hair);
-}
-
-.post-content figure { margin: 1.6em 0; }
-.post-content figcaption {
-  margin-top: 0.5rem;
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.03em;
-  color: var(--ink-faint);
-  text-align: center;
-  text-shadow: none;
-}
-
-/* ---- Tables ---- */
-
-.post-content table {
-  width: 100%;
-  margin: 1.6em 0;
-  border-collapse: collapse;
-  font-size: 0.92rem;
-}
-.post-content th,
-.post-content td {
-  padding: 0.55em 0.75em;
-  text-align: left;
-  border-bottom: 1px solid var(--hair);
-}
-.post-content th {
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-faint);
-  border-bottom-color: var(--hair-strong);
-}
-.post-content td { color: var(--ink-dim); }
-
-/* ---- Code ---- */
-
-.post-content code {
-  font-family: var(--mono);
-  font-size: 0.87em;
-  text-shadow: none;
-}
-
-/* Inline: a warm tint, enough to separate it without becoming a button. */
-.post-content :not(pre) > code {
-  padding: 0.14em 0.4em;
-  border-radius: 4px;
-  background: rgba(216, 121, 76, 0.12);
-  border: 1px solid rgba(216, 121, 76, 0.16);
-  color: var(--accent-soft);
-}
-
-/* Blocks: the same recessed panel the hub uses for its project cards. Long
-   lines scroll inside the block rather than widening the page. */
-.post-content pre,
-.post-content .highlight,
-.post-content .highlighter-rouge {
-  margin: 1.6em 0;
-}
-.post-content pre {
-  padding: 0.95rem 1.1rem;
-  overflow-x: auto;
-  font-family: var(--mono);   /* a <pre> with no <code> child would fall back to UA monospace */
-  border: 1px solid rgba(216, 121, 76, 0.18);
-  border-radius: 9px;
-  background: linear-gradient(165deg, rgba(30, 15, 10, 0.72), rgba(14, 8, 5, 0.78));
-  font-size: 0.84rem;
-  line-height: 1.6;
-  color: var(--ink);
-  text-shadow: none;
-  -webkit-overflow-scrolling: touch;
-}
-.post-content pre > code {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font-size: inherit;
-}
-/* Rouge nests .highlight inside .highlighter-rouge; flatten the double box. */
-.post-content .highlight { background: none; }
-.post-content .highlight pre { margin: 0; }
-
-/* ---- Rouge tokens, warm ---- */
-
-.highlight .c, .highlight .c1, .highlight .cm, .highlight .cs,
-.highlight .cd { color: #8a6f60; font-style: italic; }        /* comment */
-.highlight .k, .highlight .kd, .highlight .kn, .highlight .kp,
-.highlight .kr, .highlight .kt, .highlight .kc { color: #e6a271; }  /* keyword */
-.highlight .s, .highlight .s1, .highlight .s2, .highlight .sb,
-.highlight .sc, .highlight .sd, .highlight .se, .highlight .sh,
-.highlight .si, .highlight .sx, .highlight .sr { color: #b9c98a; }  /* string */
-.highlight .m, .highlight .mi, .highlight .mf, .highlight .mh,
-.highlight .mo, .highlight .il { color: #d8945c; }            /* number */
-.highlight .nf, .highlight .nd { color: #79c2cf; }            /* function */
-.highlight .nc, .highlight .nn, .highlight .no { color: #e6b877; }  /* class / const */
-.highlight .nt { color: #d8794c; }                            /* tag */
-.highlight .na { color: #c8b3a3; }                            /* attribute */
-.highlight .nv, .highlight .vi, .highlight .vg { color: #f1e7da; }  /* variable */
-.highlight .o, .highlight .ow, .highlight .p { color: #c8b3a3; }    /* operator */
-.highlight .gd { color: #e07a6a; }                            /* diff — */
-.highlight .gi { color: #9fc48a; }                            /* diff + */
-.highlight .gh, .highlight .gu { color: #94796a; }
-.highlight .err { color: #e07a4e; }
 
 /* ---- Back link ---- */
 
@@ -538,7 +335,7 @@ body {
   border-bottom-color: transparent;
 }
 .post-nav__back:hover,
-.post-nav__back:focus-visible { border-bottom-color: rgba(230, 162, 113, 0.5); }
+.post-nav__back:focus-visible { border-bottom-color: rgba(var(--accent-soft-rgb), 0.5); }
 
 /* ================= Footer ================= */
 
@@ -628,7 +425,7 @@ body {
   width: 100%;
   height: 100%;
   display: block;
-  filter: drop-shadow(0 0 5px rgba(216, 121, 76, 0.28)) drop-shadow(0 1px 2px rgba(8, 4, 2, 0.5));
+  filter: drop-shadow(0 0 5px rgba(var(--accent-rgb), 0.28)) drop-shadow(0 1px 2px rgba(var(--shade-rgb), 0.5));
   transition: transform 0.3s var(--ease), filter 0.3s var(--ease);
 }
 .shelf__icon--fill { fill: currentColor; }
@@ -636,7 +433,7 @@ body {
 .shelf__link:hover .shelf__icon,
 .shelf__link:focus-visible .shelf__icon {
   transform: translateY(-3px) scale(1.1);
-  filter: drop-shadow(0 0 8px rgba(230, 162, 113, 0.6)) drop-shadow(0 0 16px rgba(216, 121, 76, 0.35));
+  filter: drop-shadow(0 0 8px rgba(var(--accent-soft-rgb), 0.6)) drop-shadow(0 0 16px rgba(var(--accent-rgb), 0.35));
 }
 
 /* desynced timings — non-harmonic durations + offset phases */
@@ -647,6 +444,7 @@ body {
 .shelf__link:nth-child(5) { --gd: 10s;   --ff: 8.3s; --fd1: -5.4s; --fd2: -4.7s; }
 .shelf__link:nth-child(6) { --gd: 10.7s; --ff: 7.2s; --fd1: -3.8s; --fd2: -8.5s; }
 .shelf__link:nth-child(7) { --gd: 9.2s;  --ff: 8.8s; --fd1: -6.5s; --fd2: -2.6s; }
+.shelf__link:nth-child(8) { --gd: 11.4s; --ff: 7.5s; --fd1: -2.9s; --fd2: -7.3s; }
 
 /* Cursor-anchored leader-line readout (replaces the native tooltip), styled to
    the hub's tarot signature diagram: thin line → node → label. Carried over from
@@ -669,7 +467,7 @@ body {
 }
 .tip__leader.is-on { opacity: 1; }
 .tip__line { stroke: var(--hair-strong); stroke-width: 1; }
-.tip__line, .tip__node { filter: drop-shadow(0 0 4px rgba(216, 121, 76, 0.35)); }
+.tip__line, .tip__node { filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.35)); }
 .tip__node { fill: var(--accent-soft); }
 .tip__tick { fill: var(--ink-faint); }
 
@@ -685,7 +483,7 @@ body {
   padding: 0.42rem 0.6rem 0.46rem;
   border: 1px solid var(--hair);
   border-radius: 7px;
-  background: rgba(12, 6, 3, 0.82);
+  background: rgba(var(--well-rgb), 0.82);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.42);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -745,10 +543,9 @@ body {
   75%  { opacity: 0.9; }
 }
 
-/* Same posture as the hub: kill the motion, keep the design. The video is
-   hidden rather than paused, so the gradient shows instead. */
+/* Same posture as the hub: kill the motion, keep the design. (house.css hides
+   the video itself, so the theme's gradient shows instead.) */
 @media (prefers-reduced-motion: reduce) {
-  .bg__video { display: none; }
   .post-list > li,
   .post-link__arrow,
   * {

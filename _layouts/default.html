@@ -15,8 +15,12 @@
 
   {%- include footer.html -%}
 
-  {%- assign v = site.time | date: '%s' -%}
-  <script src="{{ '/assets/js/bg.js' | relative_url }}?v={{ v }}"></script>
+  {%- assign hub = site.home_url | default: 'https://dataterminals.github.io/' -%}
+  {%- assign v = site.time | date: '%s' %}
+  <!-- theme.js is the hub's: the theme on show, its background clip, and the
+       switch in the corner. It resolves the clips against its own url, so they
+       come from the hub wherever this page is. -->
+  <script src="{{ hub }}theme.js"></script>
   <!-- tip.js owns the shared hover readout; shelf.js binds to it. -->
   <script src="{{ '/assets/js/tip.js' | relative_url }}?v={{ v }}"></script>
   <script src="{{ '/assets/js/shelf.js' | relative_url }}?v={{ v }}"></script>

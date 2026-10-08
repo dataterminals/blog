@@ -1,0 +1,32 @@
+---
+layout: null
+permalink: /posts.json
+---
+{%- comment -%}
+  Every post, rendered, for the blog viewer at the foot of the hub
+  (dataterminals.github.io — blog.js there). The hub reads this rather than
+  scraping the post pages, and `html` is each post's body exactly as its own
+  page carries it: posts are built before pages, so by the time Jekyll gets to
+  this file every post is already HTML — kramdown's output, Rouge's highlighting,
+  every Liquid tag resolved — with no layout around it.
+
+  Newest first, the order site.posts keeps; the hub sorts it both ways itself.
+  `date` is the machine-readable one it sorts on; `label` is the date as the
+  blog prints it, so the hub never formats one and can't land a post stamped
+  at midnight UTC on the previous day west of Greenwich.
+
+  Adding a field is safe; renaming one breaks the viewer until blog.js is told.
+{%- endcomment -%}
+{
+  "posts": [
+    {%- for post in site.posts %}
+    {
+      "title": {{ post.title | jsonify }},
+      "date": {{ post.date | date_to_xmlschema | jsonify }},
+      "label": {{ post.date | date: "%b %-d, %Y" | jsonify }},
+      "url": {{ post.url | absolute_url | jsonify }},
+      "html": {{ post.content | jsonify }}
+    }{% unless forloop.last %},{% endunless %}
+    {%- endfor %}
+  ]
+}

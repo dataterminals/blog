@@ -13,7 +13,11 @@ layout: default
     </p>
   </header>
 
-  <div class="post-content e-content" itemprop="articleBody">
+  {%- comment -%}
+    .prose is the hub's (house.css): the same rules set this post in the blog
+    viewer at the foot of the hub, so it reads the same in both places.
+  {%- endcomment -%}
+  <div class="post-content prose e-content" itemprop="articleBody">
     {{ content }}
   </div>
 

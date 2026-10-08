@@ -1,16 +1,24 @@
-<!-- The hub's atmosphere, carried over intact: blurred looping clip, tinted
-     fallback, scrim, film grain. All three layers are position:fixed, so they
-     hold still while a post scrolls past them.
+<!-- The hub's atmosphere: blurred looping clip, tinted fallback, scrim, film
+     grain. All three layers are position:fixed, so they hold still while a post
+     scrolls past them. Their rules come from the hub's house.css.
 
-     The clips are copies of the hub's assets/ files, not references to them —
-     this repo stays self-contained and previews correctly offline. If you swap
-     the loop on the landing page, copy the new files here too. -->
+     The <video> is empty on purpose. theme.js, loaded from the hub, fills in the
+     <source>s for whichever of the hub's themes is mounted and fades it in once
+     it can play; the clips are the hub's own files, so a reader arriving from
+     there usually has the one they need cached already. Until then — and for
+     good without the script or a playable file — the theme's gradient shows. -->
 <div class="bg" aria-hidden="true">
-  <video class="bg__video" autoplay muted loop playsinline preload="auto"
-         poster="{{ '/assets/poster.jpg' | relative_url }}">
-    <source src="{{ '/assets/bg.webm' | relative_url }}" type="video/webm">
-    <source src="{{ '/assets/bg.mp4' | relative_url }}" type="video/mp4">
-  </video>
+  <video class="bg__video" autoplay muted loop playsinline preload="auto"></video>
 </div>
 <div class="bg__scrim" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
+
+<!-- The hub's theme switch, fixed to the top-right corner the same as there.
+     Hidden until theme.js mounts it: without the script there is nothing to
+     switch, so an inert capsule would be a lie. -->
+<div class="theme" hidden>
+  <button class="theme__switch" type="button" id="theme-switch">
+    <span class="theme__track" aria-hidden="true"><span class="theme__thumb"></span></span>
+    <span class="theme__name" aria-hidden="true"></span>
+  </button>
+</div>
